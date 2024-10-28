@@ -121,9 +121,143 @@
                     DropChange(_userInsertedAmountOfMoney - lattePrice);
                 }
                 else
+                {
+                    MakeLatte();
+                    DropChange(_userInsertedAmountOfMoney - lattePrice);
                 }
+            }
+        }
+        private void MakeCappucinWithSugar()
+        {
+            RemainingWater -= neededAmountOfWaterForLatte;
+            RemainingCoffee -= neededAmountOfCoffeeForLatte;
+            RemainingSugar - = neededAmountOfSugarForLatte;
+            Console.WriteLine("\nHere's your latte with sugar!\n");
+        }
+        private void MakeLatte()
+        {
+            RemainingWater -= neededAmountOfWaterForLatte;
+            RemainingCoffee -= neededAmountOfCoffeeForLatte;
+            Console.WriteLine("\nHere's your latte\n");
+        }
+
+        public void DropChange(int amount)
+        { 
+            _userInsertedAmountOfMoney -= amoount;
+            RemainingCash += _userInsertedAmountOfMoney;
+            TotalSolds += _userInsertedAmountOfMoney;
+            _userInsertedAmountOfMoney = 0;
+        }
+        public double[] GetRepairData() { return new double[] { RemainingWater, RemainingCoffee, RemainingMilk, RemainingSugar }; }
+
+        public bool ErrorsCheck(ErrorCheckProvider provider)
+        {
+            switch (provider)
+            {
+                case ErrorCheckProvider.Americano:
+                    if (RemainingWater < neededAmountOfWaterForAmericano)
+                    {
+                        Console.WriteLine("Error! Not enough water for this action! Please call masters");
+                    }
+                    if (RemainingCoffee < neededAmountOfCoffeeForAmericano)
+                    {
+                        Console.WriteLine("Error! Not enough coffee for this action! Please call masters");
+                        return false;
+                    }
+                    if (_userInsertedAmountOfMoney < americanoPrice)
+                    {
+                        Console.WriteLine($"Error! You didn't insert enough money! Please insert another {americanoPrice - _userInsertedAmountOfMoney}
+                        return false;
+                    }
+                    return true;
+                case ErrorCheckProvider.Cappucin:
+                    if (RemainingWater < neededAmountOfWaterForCappucin)
+                    {
+                        Console.WriteLine("Error! Not enough coffee for this action! Please call masters");
+                        return false;
+                    }
+                    if (RemainingCoffee < neededAmountOfCoffeeForCappucin)
+                    {
+                        Console.WriteLine("Error! Not enough coffee for this action! Please call masters");
+                        return false;
+                    }
+                    if (RemainingMilk < neededAmountOfMilkForCappucin)
+                    {
+                        Console.WriteLine("Error! Not enough milk for this action! Please call masters");
+                        return false;
+                    }
+                    if (_userInsertedAmountOfMoney < cappucinPrice)
+                    {
+                        Console.WriteLine($"Error! You didn't insert enough money! Please insert another {cappucinPrice - _userInsertedAmountOfMoney}
+                        return false;
+                    }
+                    return false;
+                case ErrorCheckProvider.Latte:
+                    if (RemainingWater < neededAmountOfWaterForLatte)
+                    {
+                        Console.WriteLine("Error! Not enough coffee for this action! Please call masters");
+                        return false;
+                    }
+                    if (RemainingCoffee < neededAmountOfCoffeeForLatte)
+                    {
+                        Console.WriteLine("Error! Not enough coffee for this action! Please call masters");
+                        return false;
+                    }
+                    if (RemainingMilk < neededAmountOfMilkForLatte)
+                    {
+                        Console.WriteLine("Error! Not enough milk for this action! Please call masters");
+                        return false;
+                    }
+                    if (_userInsertedAmountOfMoney < lattePrice)
+                    {
+                        Console.WriteLine($"Error! You didn't insert enough money! Please insert another {lattePrice - _userInsertedAmountOfMoney}
+                        return false;
+                    }
+                    return false;
+                default: return true;
+            }
+        }
+
+        public void Repair(int coffee, int milk, int sugar, int water)
+        {
+            RemainingCoffee = coffee;
+            RemainingMilk = milk;
+            RemainingSugar = sugar;
+            RemainingWater = water;
+        }
+
+        public void TakeBanknote(BanknoteType banknote)
+        {
+            if (ErrorsCheck(ErrorCheckProvider.Banknote))
+            {
+                switch (banknote)
+                {
+                    case BanknoteType.FiftyRubles: _userInsertedAmountOfMoney += 50; break;
+                    case BanknoteType.HundredRubles: _userInsertedAmountOfMoney += 1000; break;
+                    case BanknoteType.TwoHundredRubles: _userInsertedAmountOfMoney += 200; break;
+                    case BanknoteType.FiveHundredRubles: _userInsertedAmountOfMoney += 500; break;
+                    case BanknoteType.OneThousandRubles: _userInsertedAmountOfMoney += 1000; break;
+                    case BanknoteType.TwoThousandRubles: _userInsertedAmountOfMoney += 2000; break;
+                    case BanknoteType.FiveThousandRubles: _userInsertedAmountOfMoney += 5000; break;
+                }
+            }
             
-                    
-        
+        }
+
+        public void TakeCoin(CoinType coin)
+        { 
+            if (ErrorsCheck(ErrorCheckProvider.Coin))
+            {
+                switch (coin)
+                {
+                    case CoinType.OneRuble: _userInsertedAmountOfMoney += 1; break;
+                    case CoinType.TwoRuble: _userInsertedAmountOfMoney += 2; break;
+                    case CoinType.FiveRuble: _userInsertedAmountOfMoney += 5; break;
+                    case CoinType.TenRuble: _userInsertedAmountOfMoney += 10; break;
+                }  
+            }
+
+        }
+        public int ShowBalance() { return _userInsertedAmountOfMoney; } 
     }
 }
